@@ -124,9 +124,6 @@ export class SpeakerListPage {
 
         // share sheet
         branchUniversalObj.showShareSheet(analytics, properties, message)
-        alert('Response: ' + JSON.stringify(res))
-      }).catch(function (err) {
-        alert('Error: ' + JSON.stringify(err))
       })
     }
   } as ActionSheetButton,
