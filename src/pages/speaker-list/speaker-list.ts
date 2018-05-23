@@ -16,11 +16,11 @@ import { SpeakerDetailPage } from '../speaker-detail/speaker-detail';
 
 // TODO remove
 export interface ActionSheetButton {
-  text?: string;
-  role?: string;
-  icon?: string;
-  cssClass?: string;
-  handler?: () => boolean|void;
+text?: string;
+role?: string;
+icon?: string;
+cssClass?: string;
+handler?: () => boolean|void;
 };
 
 @Component({
@@ -76,41 +76,93 @@ export class SpeakerListPage {
           }
         } as ActionSheetButton,
         {
-          text: 'Share via ...'
-        } as ActionSheetButton,
-        {
-          text: 'Cancel',
-          role: 'cancel'
-        } as ActionSheetButton
-      ]
-    } as ActionSheetOptions);
-
-    actionSheet.present();
-  }
-
-  openContact(speaker: any) {
-    let mode = this.config.get('mode');
-
-    let actionSheet = this.actionSheetCtrl.create({
-      title: 'Contact ' + speaker.name,
-      buttons: [
-        {
-          text: `Email ( ${speaker.email} )`,
-          icon: mode !== 'ios' ? 'mail' : null,
+          text: 'Share via ...',
           handler: () => {
-            window.open('mailto:' + speaker.email);
-          }
-        } as ActionSheetButton,
-        {
-          text: `Call ( ${speaker.phone} )`,
-          icon: mode !== 'ios' ? 'call' : null,
-          handler: () => {
-            window.open('tel:' + speaker.phone);
-          }
-        } as ActionSheetButton
-      ]
-    } as ActionSheetOptions);
+            console.log('Branch BUO');
+            const Branch = window['Branch'];
 
-    actionSheet.present();
-  }
+            // only canonicalIdentifier is required
+            var buo = {
+            canonicalIdentifier: 'content/123',
+            canonicalUrl: 'https://example.com/content/123',
+            title: 'Content 123 Title',
+            contentDescription: 'Content 123 Description ' + Date.now(),
+            contentImageUrl: 'http://lorempixel.com/400/400/',
+            price: 12.12,
+            currency: 'GBD',
+            contentIndexingMode: 'private',
+            contentMetadata: {
+              custom: 'data',
+              testing: 123,
+              this_is: true
+            }
+          }
+
+          // create a branchUniversalObj variable to reference with other Branch methods
+          var branchUniversalObj = null
+          Branch.createBranchUniversalObject(buo).then(function (res) {
+            branchUniversalObj = res
+            // optional fields
+            var analytics = {
+            channel: 'facebook',
+            feature: 'onboarding',
+            campaign: 'content 123 launch',
+            stage: 'new user',
+            tags: ['one', 'two', 'three']
+          }
+
+          // optional fields
+          var properties = {
+          $desktop_url: 'http://www.example.com/desktop',
+          custom_string: 'data',
+          custom_integer: Date.now(),
+          custom_boolean: true,
+          $email_subject: 'Hello'
+        }
+
+        var message = 'Check out this link'
+
+        // share sheet
+        branchUniversalObj.showShareSheet(analytics, properties, message)
+        alert('Response: ' + JSON.stringify(res))
+      }).catch(function (err) {
+        alert('Error: ' + JSON.stringify(err))
+      })
+    }
+  } as ActionSheetButton,
+  {
+    text: 'Cancel',
+    role: 'cancel'
+  } as ActionSheetButton
+]
+} as ActionSheetOptions);
+
+actionSheet.present();
+}
+
+openContact(speaker: any) {
+  let mode = this.config.get('mode');
+
+  let actionSheet = this.actionSheetCtrl.create({
+    title: 'Contact ' + speaker.name,
+    buttons: [
+      {
+        text: `Email ( ${speaker.email} )`,
+        icon: mode !== 'ios' ? 'mail' : null,
+        handler: () => {
+          window.open('mailto:' + speaker.email);
+        }
+      } as ActionSheetButton,
+      {
+        text: `Call ( ${speaker.phone} )`,
+        icon: mode !== 'ios' ? 'call' : null,
+        handler: () => {
+          window.open('tel:' + speaker.phone);
+        }
+      } as ActionSheetButton
+    ]
+  } as ActionSheetOptions);
+
+  actionSheet.present();
+}
 }

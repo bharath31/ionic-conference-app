@@ -69,6 +69,30 @@ export class ConferenceApp {
     public splashScreen: SplashScreen
   ) {
 
+    platform.ready().then(() => {
+     splashScreen.hide();
+     branchInit();
+   });
+
+   platform.resume.subscribe(() => {
+     branchInit();
+   });
+
+    // Branch initialization
+    const branchInit = () => {
+      // only on devices
+      if (!platform.is("cordova")) {
+        return;
+      }
+      const Branch = window["Branch"];
+      Branch.initSession().then(data => {
+        if (data["+clicked_branch_link"]) {
+          // read deep link data on click
+          alert("Deep Link Data: " + JSON.stringify(data));
+        }
+      });
+    };
+
     // Check if the user has already seen the tutorial
     this.storage.get('hasSeenTutorial')
       .then((hasSeenTutorial) => {
