@@ -71,15 +71,15 @@ export class ConferenceApp {
 
     platform.ready().then(() => {
      splashScreen.hide();
-     branchInit();
+     handleBranch();
    });
 
    platform.resume.subscribe(() => {
-     branchInit();
+     handleBranch();
    });
 
     // Branch initialization
-    const branchInit = () => {
+    const handleBranch = () => {
       // only on devices
       if (!platform.is("cordova")) {
         return;
