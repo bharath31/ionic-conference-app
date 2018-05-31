@@ -61,80 +61,63 @@ export class SpeakerListPage {
   }
 
   openSpeakerShare(speaker: any) {
-    let actionSheet = this.actionSheetCtrl.create({
-      title: 'Share ' + speaker.name,
-      buttons: [
-        {
-          text: 'Copy Link',
-          handler: () => {
-            console.log('Copy link clicked on https://twitter.com/' + speaker.twitter);
-            if ( (window as any)['cordova'] && (window as any)['cordova'].plugins.clipboard) {
-              (window as any)['cordova'].plugins.clipboard.copy(
-                'https://twitter.com/' + speaker.twitter
-              );
-            }
-          }
-        } as ActionSheetButton,
-        {
-          text: 'Share via ...',
-          handler: () => {
-            console.log('Branch BUO');
-            const Branch = window['Branch'];
+    const Branch = window['Branch'];
 
-            // only canonicalIdentifier is required
-            var buo = {
-            canonicalIdentifier: 'content/123',
-            canonicalUrl: 'https://example.com/content/123',
-            title: 'Content 123 Title',
-            contentDescription: 'Content 123 Description ' + Date.now(),
-            contentImageUrl: 'http://lorempixel.com/400/400/',
-            price: 12.12,
-            currency: 'GBD',
-            contentIndexingMode: 'private',
-            contentMetadata: {
-              custom: 'data',
-              testing: 123,
-              this_is: true
-            }
-          }
-
-          // create a branchUniversalObj variable to reference with other Branch methods
-          var branchUniversalObj = null
-          Branch.createBranchUniversalObject(buo).then(function (res) {
-            branchUniversalObj = res
-            // optional fields
-            var analytics = {
-            channel: 'facebook',
-            feature: 'onboarding',
-            campaign: 'content 123 launch',
-            stage: 'new user',
-            tags: ['one', 'two', 'three']
-          }
-
-          // optional fields
-          var properties = {
-          $desktop_url: 'http://www.example.com/desktop',
-          custom_string: 'data',
-          custom_integer: Date.now(),
-          custom_boolean: true,
-          $email_subject: 'Hello'
-        }
-
-        var message = 'Check out this link'
-
-        // share sheet
-        branchUniversalObj.showShareSheet(analytics, properties, message)
-      })
+    // only canonicalIdentifier is required
+    var buo = {
+      canonicalIdentifier: 'content/123',
+      canonicalUrl: 'https://example.com/content/123',
+      title: 'Content 123 Title',
+      contentDescription: 'Content 123 Description ' + Date.now(),
+      contentImageUrl: 'http://lorempixel.com/400/400/',
+      price: 12.12,
+      currency: 'GBD',
+      contentIndexingMode: 'private',
+      contentMetadata: {
+        custom: 'data',
+        testing: 123,
+        this_is: true
+      }
     }
-  } as ActionSheetButton,
-  {
-    text: 'Cancel',
-    role: 'cancel'
-  } as ActionSheetButton
-]
-} as ActionSheetOptions);
 
-actionSheet.present();
+  var analytics = {
+    channel: 'facebook',
+    feature: 'onboarding',
+    campaign: 'content 123 launch',
+    stage: 'new user',
+    tags: ['one', 'two', 'three']
+  }
+
+  // create a branchUniversalObj variable to reference with other Branch methods
+  var branchUniversalObj = null
+  Branch.createBranchUniversalObject(buo).then(function (res) {
+    branchUniversalObj = res
+  })
+
+  let actionSheet = this.actionSheetCtrl.create({
+    title: 'Share ' + speaker.name,
+    buttons: [
+      {
+        text: 'Share via ...',
+        handler: () => {
+          var message = 'Check out this link'
+          var email_properties = {
+            $desktop_url: 'http://www.example.com/desktop',
+            custom_string: 'data',
+            custom_integer: Date.now(),
+            custom_boolean: true,
+            $email_subject: 'Hello'
+          }
+          branchUniversalObj.showShareSheet(analytics, email_properties, message)
+        }
+      } as ActionSheetButton,
+      {
+        text: 'Cancel',
+        role: 'cancel'
+      } as ActionSheetButton
+    ]
+  } as ActionSheetOptions);
+  actionSheet.present();
 }
 
 openContact(speaker: any) {
